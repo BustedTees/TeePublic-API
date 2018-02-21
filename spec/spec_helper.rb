@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'teepublic/api'
+require 'tee_public/api'
 require 'vcr'
 
 VCR.configure do |c|

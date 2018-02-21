@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'teepublic/api/version'
+require 'tee_public/api/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "teepublic-api"
-  spec.version       = Teepublic::Api::VERSION
+  spec.version       = TeePublic::Api::VERSION
   spec.authors       = ["Joe Burns"]
   spec.email         = ["joe@teepublic.com"]
 
