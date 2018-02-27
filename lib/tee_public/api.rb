@@ -33,7 +33,7 @@ module TeePublic
       id = arguments.shift
       addl_params = arguments
 
-      api_call(endpoint, id, addl_params)
+      JSON.parse(api_call(endpoint, id, addl_params).body)
     end
 
     private
