@@ -21,10 +21,10 @@ module TeePublic
 
     def self.adapter
       @adapter ||= Faraday.new(url: configuration.api_endpoint) do |req|
-        req.adapter  Faraday.default_adapter
         req.request  :url_encoded
         req.response :logger if configuration.debug
         req.headers['X-API-Key'] = configuration.api_key unless configuration.api_key.nil?
+        req.adapter  Faraday.default_adapter
       end
     end
 
