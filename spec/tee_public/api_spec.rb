@@ -50,7 +50,7 @@ describe TeePublic::Api do
 
     it 'routes missing methods to that endpoint' do
       stub_request(:get, "https://api.teepublic.com/v1/status").
-         with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2', 'X-Api-Key'=>'ABCDEFG12345'}).
+         with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
          to_return(:status => 200, :body => status_ok_body, :headers => {})
 
       TeePublic::Api.status
@@ -59,7 +59,7 @@ describe TeePublic::Api do
 
     it 'returns parsed JSON from an API call' do 
       stub_request(:get, "https://api.teepublic.com/v1/status").
-         with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2', 'X-Api-Key'=>'ABCDEFG12345'}).
+         with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
          to_return(:status => 200, :body => status_ok_body, :headers => {})
 
       expect(TeePublic::Api.status).to be_instance_of(Hash)
