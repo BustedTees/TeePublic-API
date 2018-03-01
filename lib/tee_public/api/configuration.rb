@@ -7,6 +7,11 @@ module TeePublic
       attr_accessor :debug
 
       def initialize
+        reset!
+      end
+
+      # Utility method for resetting configuration objects during testing.
+      def reset!
         @api_endpoint = 'https://api.teepublic.com/'
         @version = 'v1'
         @debug = false

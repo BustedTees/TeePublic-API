@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe TeePublic::Api do
-  before(:each) do
-    # Reset configuration
-    TeePublic::Api.configuration = nil
+  let(:status_ok_body) { "{\"status\":\"ok\"}" }
+
+  before(:all) do
+    WebMock.disable_net_connect!
   end
 
   it 'has a version number' do
@@ -11,13 +12,15 @@ describe TeePublic::Api do
   end
 
   describe '#configure' do
-    before do
-      TeePublic::Api.configure do |config|
-        config.api_key = 'ABCDEFG12345'
-      end
+    before(:each) do
+      TeePublic::Api.configuration.reset!
     end
 
     it 'has an api key' do
+      TeePublic::Api.configure do |config|
+        config.api_key = 'ABCDEFG12345'
+      end
+        
       expect(TeePublic::Api.configuration.api_key).to eq('ABCDEFG12345')
     end
 
@@ -46,17 +49,20 @@ describe TeePublic::Api do
     end
 
     it 'routes missing methods to that endpoint' do
-      WebMock.disable_net_connect!
-      TeePublic::Api.configure do |config|
-        config.api_endpoint = 'http://test.api.teepublic.com'
-      end
-
-      stub_request(:get, "http://test.api.teepublic.com/v1/designs").
+      stub_request(:get, "https://api.teepublic.com/v1/status").
          with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2', 'X-Api-Key'=>'ABCDEFG12345'}).
-         to_return(:status => 200, :body => '{"status":"ok"}', :headers => {})
+         to_return(:status => 200, :body => status_ok_body, :headers => {})
 
-      TeePublic::Api.designs
-      expect(a_request(:get, 'http://test.api.teepublic.com/v1/designs')).to have_been_made.once
+      TeePublic::Api.status
+      expect(a_request(:get, 'https://api.teepublic.com/v1/status')).to have_been_made.once
+    end
+
+    it 'returns parsed JSON from an API call' do 
+      stub_request(:get, "https://api.teepublic.com/v1/status").
+         with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2', 'X-Api-Key'=>'ABCDEFG12345'}).
+         to_return(:status => 200, :body => status_ok_body, :headers => {})
+
+      expect(TeePublic::Api.status).to be_instance_of(Hash)
     end
   end
 end
