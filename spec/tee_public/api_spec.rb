@@ -64,5 +64,21 @@ describe TeePublic::Api do
 
       expect(TeePublic::Api.status).to be_instance_of(Hash)
     end
+
+    it 'allows endpoint function calls ids' do
+      stub_request(:get, "https://api.teepublic.com/v1/designs/1234").
+         with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
+         to_return(:status => 200, :body => status_ok_body, :headers => {})
+
+      expect(TeePublic::Api.designs(1234)).to be_instance_of(Hash)
+    end
+
+    it 'allows complex endpoint calls via send' do
+      stub_request(:get, "https://api.teepublic.com/v1/designs/1234/t-shirts").
+         with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
+         to_return(:status => 200, :body => status_ok_body, :headers => {})
+
+      expect(TeePublic::Api.send("designs/1234/t-shirts")).to be_instance_of(Hash)
+    end
   end
 end
