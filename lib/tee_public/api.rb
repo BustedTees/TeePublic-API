@@ -31,18 +31,18 @@ module TeePublic
     def self.method_missing(method_name, *arguments, &block)
       endpoint = method_name
       id = arguments.shift
-      addl_params = arguments
+      addl_params = arguments.shift
 
       JSON.parse(api_call(endpoint, id, addl_params).body)
     end
 
     private
-    def self.api_call(endpoint, id = nil, addl_params = [])
+    def self.api_call(endpoint, id = nil, addl_params = {})
       url = "#{configuration.version}/#{endpoint}"
       url += "/#{id}" unless id.nil?
 
       adapter.get(url) do |request|
-        request.params.merge(addl_params)
+        request.params.merge!(addl_params) unless addl_params.nil?
       end
     end
   end

@@ -47,6 +47,15 @@ describe TeePublic::Api do
 
       expect(TeePublic::Api.configuration.version).to eq('v2')
     end
+  end
+
+  describe 'API Calls' do
+    before(:each) do
+      TeePublic::Api.configuration.reset!
+      TeePublic::Api.configure do |config|
+        config.api_key = 'ABCDEFG12345'
+      end
+    end
 
     it 'routes missing methods to that endpoint' do
       stub_request(:get, "https://api.teepublic.com/v1/status").
@@ -71,6 +80,17 @@ describe TeePublic::Api do
          to_return(:status => 200, :body => status_ok_body, :headers => {})
 
       expect(TeePublic::Api.designs(1234)).to be_instance_of(Hash)
+    end
+
+    it 'allows parameters via options hash' do 
+      stub_request(:get, "https://api.teepublic.com/v1/designs/1234").
+         with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}, :query => { my_param: 'dog'}).
+         to_return(:status => 200, :body => status_ok_body, :headers => {})
+
+      TeePublic::Api.designs(1234, my_param: 'dog')
+      expect(a_request(:get, 'https://api.teepublic.com/v1/designs/1234').
+        with(query: { my_param: 'dog'}, :headers => {'X-Api-Key'=>'ABCDEFG12345'})
+      ).to have_been_made.once
     end
 
     it 'allows complex endpoint calls via send' do
