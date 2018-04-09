@@ -71,18 +71,9 @@ describe TeePublic::Api do
          with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
          to_return(:status => 200, :body => status_ok_body, :headers => {})
 
-      expect(TeePublic::Api.status).to be_instance_of(Hash)
-    end
-
-    it 'returns parsed JSON headers from an API call' do
-      headers = {'foo' => 'bar'}
-      stub_request(:get, "https://api.teepublic.com/v1/status").
-         with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
-         to_return(:status => 200, :body => status_ok_body, :headers => headers)
-
       response = TeePublic::Api.status
       expect(response).to be_instance_of(Hash)
-      expect(response['response_headers']).to eq(headers)
+      expect(response).to eq({'body' => JSON.parse(status_ok_body), 'headers' => {}})
     end
 
     it 'allows endpoint function calls ids' do

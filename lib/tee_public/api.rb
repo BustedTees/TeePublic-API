@@ -34,7 +34,7 @@ module TeePublic
       addl_params = arguments.shift
       response = api_call(endpoint, id, addl_params)
 
-      JSON.parse(response.body).merge({'response_headers' => response.headers})
+      {'body' => JSON.parse(response.body), 'headers' => response.headers}
     end
 
     private
