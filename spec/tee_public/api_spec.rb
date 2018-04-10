@@ -72,7 +72,10 @@ describe TeePublic::Api do
          to_return(:status => 200, :body => status_ok_body, :headers => {})
 
       response = TeePublic::Api.status
+
       expect(response).to be_instance_of(Hash)
+      expect(response['body']).to be_instance_of(Hash)
+      expect(response['headers']).to be_instance_of(Hash)
       expect(response).to eq({'body' => JSON.parse(status_ok_body), 'headers' => {}})
     end
 
