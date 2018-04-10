@@ -34,7 +34,10 @@ module TeePublic
       addl_params = arguments.shift
       response = api_call(endpoint, id, addl_params)
 
-      {'body' => JSON.parse(response.body), 'headers' => response.headers}
+      {
+        'body' => JSON.parse(response.body),
+        'headers' => response.headers.to_hash
+      }
     end
 
     private
