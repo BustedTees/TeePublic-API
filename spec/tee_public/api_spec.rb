@@ -20,7 +20,7 @@ describe TeePublic::Api do
       TeePublic::Api.configure do |config|
         config.api_key = 'ABCDEFG12345'
       end
-        
+
       expect(TeePublic::Api.configuration.api_key).to eq('ABCDEFG12345')
     end
 
@@ -66,12 +66,14 @@ describe TeePublic::Api do
       expect(a_request(:get, 'https://api.teepublic.com/v1/status')).to have_been_made.once
     end
 
-    it 'returns parsed JSON from an API call' do 
+    it 'returns parsed JSON from an API call' do
       stub_request(:get, "https://api.teepublic.com/v1/status").
          with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}).
          to_return(:status => 200, :body => status_ok_body, :headers => {})
 
-      expect(TeePublic::Api.status).to be_instance_of(Hash)
+      response = TeePublic::Api.status
+      expect(response).to be_instance_of(Hash)
+      expect(response).to eq({'body' => JSON.parse(status_ok_body), 'headers' => {}})
     end
 
     it 'allows endpoint function calls ids' do
@@ -82,7 +84,7 @@ describe TeePublic::Api do
       expect(TeePublic::Api.designs(1234)).to be_instance_of(Hash)
     end
 
-    it 'allows parameters via options hash' do 
+    it 'allows parameters via options hash' do
       stub_request(:get, "https://api.teepublic.com/v1/designs/1234").
          with(:headers => {'X-Api-Key'=>'ABCDEFG12345'}, :query => { my_param: 'dog'}).
          to_return(:status => 200, :body => status_ok_body, :headers => {})
